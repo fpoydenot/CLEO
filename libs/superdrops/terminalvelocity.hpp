@@ -121,4 +121,23 @@ struct RogersGKTerminalVelocity {
   double operator()(const Superdrop &drop) const;
 };
 
+/**
+ * @brief Terminal velocity formula based on Poydenot and Andreotti (2024).
+ */
+struct FPTerminalVelocity {
+  /**
+   * @brief Returns the terminal velocity of a droplet according to Poydenot et al. (2024).
+   *
+   * See "Pathways from nucleation to raindrops"
+   * by  F. Poydenot and B. Andreotti (2024).
+   * Formulation is approximation of Gunn and Kinzer (1949), Reyssat (2007), Testik and Rahman (2016).
+   *
+   *
+   * @param drop The superdroplet.
+   * @return The (dimensionless) terminal velocity.
+   */
+  KOKKOS_FUNCTION
+  double operator()(const Superdrop &drop) const;
+};
+
 #endif  // LIBS_SUPERDROPS_TERMINALVELOCITY_HPP_

@@ -145,3 +145,29 @@ double RogersGKTerminalVelocity::operator()(const Superdrop &drop) const {
     return acaps - bcaps * Kokkos::exp(ccaps * radius);
   }
 }
+
+/**
+ * @brief Returns the terminal velocity of a droplet according to Poydenot et al. (2024).
+ *
+ * See "Pathways from nucleation to raindrops"
+ * by  F. Poydenot and B. Andreotti (2024).
+ * Formulation is approximation of Gunn and Kinzer (1949), Reyssat (2007), Testik and Rahman (2016).
+ *
+ */
+KOKKOS_FUNCTION
+double FPTerminalVelocity::operator()(const Superdrop &drop) const {
+  constexpr double mathcalu =
+      0.003934152 / dlc::W0; // dimensionless conversion of the velocity prefactor
+  constexpr double inu_14 = 3.0e4; // Supmat PRF [2] Eq. (7) inu^(1/4)
+  constexpr double igamma = 2.8e22; // Supmat PRF [2] Eq. (7)
+  constexpr double mathcalA = 1.92671441e-10 / dlc::R0; // equivalent size A in units of R0
+
+  const auto radius_reduced = drop.get_radius() / mathcalA;
+  const auto x = Kokkos::pow(radius_reduced, 3);
+  const auto c1 = Kokkos::pow(1.0 + x / igamma, 1.0/6.0);
+  const auto c3 = Kokkos::pow(x, 1.0/6.0);
+  const auto c2 = inu_14 / c3; // order switch for optimization
+  const auto c4 = (Kokkos::sqrt(c2*c2+4.0*c1*c3)-c2)/(2.0*c1);
+
+  return mathcalu * c4 * c4;
+}
