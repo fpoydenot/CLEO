@@ -40,7 +40,7 @@ parser.add_argument(
     help="Absolute path to source configuration YAML file",
 )
 parser.add_argument(
-    "kernel",
+    "--kernels",
     type=str,
     choices=["diffgrav"],
     help="kernel example to run",
