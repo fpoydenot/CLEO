@@ -163,11 +163,11 @@ double FPTerminalVelocity::operator()(const Superdrop &drop) const {
   constexpr double mathcalA = 1.92671441e-10 / dlc::R0; // equivalent size A in units of R0
 
   const auto radius_reduced = drop.get_radius() / mathcalA;
-  const auto x = Kokkos::pow(radius_reduced, 3);
-  const auto c1 = Kokkos::pow(1.0 + x / igamma, 1.0/6.0);
-  const auto c3 = Kokkos::pow(x, 1.0/6.0);
-  const auto c2 = inu_14 / c3; // order switch for optimization
-  const auto c4 = (Kokkos::sqrt(c2*c2+4.0*c1*c3)-c2)/(2.0*c1);
+  const auto x = double{radius_reduced * radius_reduced * radius_reduced};
+  const auto c1 = Kokkos::pow(1.0 + x / igamma, 1.0 / 6.0);
+  const auto c3 = Kokkos::pow(x, 1.0 / 6.0);
+  const auto c2 = double{inu_14 / c3}; // order switch for optimization
+  const auto c4 = double{(Kokkos::sqrt(c2 * c2 + 4.0 * c1 * c3) - c2)/(2.0 * c1)};
 
   return mathcalu * c4 * c4;
 }
