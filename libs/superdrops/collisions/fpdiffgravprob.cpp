@@ -31,7 +31,7 @@
 KOKKOS_FUNCTION
 double FPDiffGravProb::lnEmax(const double log_g_r) const {
   return double{(1.0
-                 - Kokkos::exp(-0.4419871 * log_g_r)) * (0.08168582 - 1.76428132*log_g_r)
+                 - Kokkos::exp(-0.4419871 * log_g_r)) * (0.08168582 - 1.76428132 * log_g_r)
                  - 1.81053907};
 }
 
