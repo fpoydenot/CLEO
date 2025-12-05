@@ -225,7 +225,44 @@ according to Golovin's (sum of volumes) coalescence kernel.
 Prob equation is : prob_jk = K(drop1, drop2) * delta_t/delta_vol where
 K(drop1, drop2) := C(drop1, drop2) * |v1−v2|, (see Shima 2009 eqn 3),
 and K(drop1, drop2) is Golovin 1963 (coalescence) kernel */
-/*KOKKOS_FUNCTION
+KOKKOS_FUNCTION
 double FPDiffGravProb::operator()(const Superdrop &drop1, const Superdrop &drop2, const double DELT,
                                   const double VOLUME) const {
-}*/
+  const auto DELT_DELVOL = double{DELT / VOLUME};
+
+  constexpr double mathcalA = 1.92671441e-10 / dlc::R0;  // equivalent size A in units of R0
+  constexpr double mathcalAcubed = mathcalA * mathcalA * mathcalA;
+  constexpr double lbar = 352.93243;
+  const auto x = double{drop1.rcubed() / mathcalAcubed};
+  const auto y = double{drop2.rcubed() / mathcalAcubed};
+
+  /* calculate Hydrodynamic Kernel*/
+  const auto sumr = double{drop1.get_radius() + drop2.get_radius()};
+  const auto sumrsqrd = double{sumr * sumr};
+  const auto vtx = double{terminalv(drop1)};
+  const auto vty = double{terminalv(drop2)};
+  const auto vdiff = double{Kokkos::abs(vtx - vty)};
+
+  const auto radius_ratio = double{Kokkos::pow(Kokkos::fmax(x, y) / Kokkos::fmin(x, y), 1.0 / 3.0)};
+  const auto kn = double{lbar * (Kokkos::pow(x, 1.0 / 3.0)
+                                 + Kokkos::pow(y, 1.0 / 3.0)) / Kokkos::pow(x * y, 1.0 / 3.0)};
+  auto pecl = double{0.0};
+  auto eff = double{0.0};
+  auto diffgrav_kernel = double{0.0};
+
+  if (x != y) {
+    pecl = pe(1.0 / kn, radius_ratio);
+    eff = double{4.0 / pecl + deltae_pe(pecl, radius_ratio)
+                 + oseen_efficiency_vdw(kn, radius_ratio)};
+    diffgrav_kernel = double{prob_jk_const * eff * sumrsqrd * vdiff};
+  } else {
+    pecl = peeq(1.0 / kn);
+    eff = double{4.0 / pecl};
+    diffgrav_kernel = double{prob_jk_const * eff * sumrsqrd * vtx};
+  }
+
+  /* calculate probability prob_jk analogous Shima 2009 eqn 3 */
+  const auto prob_jk = diffgrav_kernel * DELT_DELVOL;
+
+  return prob_jk;
+}
