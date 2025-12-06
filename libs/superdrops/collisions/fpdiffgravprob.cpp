@@ -157,8 +157,6 @@ double FPDiffGravProb::qpe_interp(const double pec) const {
 
 KOKKOS_FUNCTION
 double FPDiffGravProb::terminalv(const double x) const {
-  constexpr double mathcalu =
-  0.003934152 / dlc::W0;  // dimensionless conversion of the velocity prefactor
   constexpr double inu_14 = 3.0e4;                       // Supmat PRF [2] Eq. (7) inu^(1/4)
   constexpr double igamma = 2.8e22;                      // Supmat PRF [2] Eq. (7)
 
@@ -167,7 +165,7 @@ double FPDiffGravProb::terminalv(const double x) const {
   const auto c2 = double{inu_14 / c3};  // order switch for optimization
   const auto c4 = double{(Kokkos::sqrt(c2 * c2 + 4.0 * c1 * c3) - c2)/(2.0 * c1)};
 
-  return mathcalu * c4 * c4;
+  return c4 * c4;
 }
 
 KOKKOS_FUNCTION

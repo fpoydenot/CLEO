@@ -90,7 +90,8 @@ struct FPDiffGravProb {
   double terminalv(const double x) const;
 
  public:
-  FPDiffGravProb() : prob_jk_const(Kokkos::numbers::pi * dlc::R0 * dlc::R0 * dlc::W0) {}
+  FPDiffGravProb() : prob_jk_const(Kokkos::numbers::pi * dlc::R0 * dlc::R0 * 0.003934152) {}
+  // mathcalu = 0.003934152 / dlc::W0;  // dimensionless conversion of the velocity prefactor
 
   /* returns probability that a pair of droplets collide
   (and coalesce or breakup etc.) according to the hydrodynamic,
