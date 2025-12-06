@@ -174,9 +174,7 @@ def run_exectuable(executable, config_filename):
 
 
 def plot_results(path2CLEO, config_filename, savefigpath, kernel):
-    plotting_script = (
-        path2CLEO / "examples" / "boxmodelcollisions" / "zerodbox_fp_plotting.py"
-    )
+    plotting_script = path2CLEO / "examples" / "zerodbox_fp" / "zerodbox_fp_plotting.py"
     python = sys.executable
 
     yaml = YAML()
