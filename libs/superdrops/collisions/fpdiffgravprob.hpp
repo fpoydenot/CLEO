@@ -38,7 +38,6 @@ a pair of droplets according to Golovin 1963
 struct FPDiffGravProb {
  private:
   double prob_jk_const;
-  FPTerminalVelocity terminalv;
   KOKKOS_FUNCTION
   double lnEmax(const double log_g_r) const;
   KOKKOS_FUNCTION
@@ -87,10 +86,11 @@ struct FPDiffGravProb {
   double pe(const double aaa_radius, const double g_r) const;
   KOKKOS_FUNCTION
   double peeq(const double aaa_radius) const;
+  KOKKOS_FUNCTION
+  double terminalv(const double x) const;
 
  public:
-  FPDiffGravProb() : prob_jk_const(Kokkos::numbers::pi * dlc::R0 * dlc::R0 * dlc::W0),
-                     terminalv() {}
+  FPDiffGravProb() : prob_jk_const(Kokkos::numbers::pi * dlc::R0 * dlc::R0 * dlc::W0) {}
 
   /* returns probability that a pair of droplets collide
   (and coalesce or breakup etc.) according to the hydrodynamic,
