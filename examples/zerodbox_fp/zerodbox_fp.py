@@ -84,8 +84,6 @@ cf = path2build / "tmp" / f"zerodbox_fp_{k}_config.yaml"
 cp = {
     "constants_filename": str(path2CLEO / "libs" / "cleoconstants.hpp"),
     "grid_filename": str(sharepath / "zerodbox_fp_dimlessGBxboundaries.dat"),
-    "COLLTSTEP": 1,
-    "maxnsupers": 4096,
     "initsupers_filename": str(sharepath / f"zerodbox_fp_{k}_dimlessSDsinit.dat"),
     "setup_filename": str(binpath / f"zerodbox_fp_{k}_setup.txt"),
     "zarrbasedir": str(binpath / f"zerodbox_fp_{k}_sol.zarr"),
