@@ -89,7 +89,8 @@ struct FPDiffGravProb {
   double peeq(const double aaa_radius) const;
 
  public:
-  FPDiffGravProb() : prob_jk_const(Kokkos::numbers::pi * dlc::R0 * dlc::R0 * dlc::W0) {}
+  FPDiffGravProb() : prob_jk_const(Kokkos::numbers::pi * dlc::R0 * dlc::R0 * dlc::W0),
+                     terminalv() {}
 
   /* returns probability that a pair of droplets collide
   (and coalesce or breakup etc.) according to the hydrodynamic,
