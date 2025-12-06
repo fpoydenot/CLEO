@@ -162,8 +162,8 @@ def main(
 
     ### --- settings for initial superdroplets for setup 1 --- ###
     # radius distirbution from exponential in droplet volume
-    rspan_1 = [0.62e-6, 6.34e-2]  # max and min range of radii to sample [m]
-    volexpr0_1 = 30.531e-6  # peak of volume exponential distribution [m]
+    rspan_1 = [64e-9, 30e-6]  # max and min range of radii to sample [m]
+    volexpr0_1 = 4.0e-6  # peak of volume exponential distribution [m]
     numconc_1 = 2**23  # total no. conc of real droplets [m^-3]
 
     # attribute generators
