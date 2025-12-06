@@ -254,8 +254,8 @@ double FPDiffGravProb::operator()(const Superdrop &drop1, const Superdrop &drop2
   /* calculate Hydrodynamic Kernel*/
   const auto sumr = double{drop1.get_radius() + drop2.get_radius()};
   const auto sumrsqrd = double{sumr * sumr};
-  const auto vtx = double{terminalv(drop1)};
-  const auto vty = double{terminalv(drop2)};
+  const auto vtx = double{terminalv(x)};
+  const auto vty = double{terminalv(y)};
   const auto vdiff = double{Kokkos::abs(vtx - vty)};
 
   const auto radius_ratio = double{Kokkos::pow(Kokkos::fmax(x, y) / Kokkos::fmin(x, y), 1.0 / 3.0)};
