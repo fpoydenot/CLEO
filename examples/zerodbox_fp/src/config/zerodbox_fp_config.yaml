@@ -30,11 +30,11 @@ domain:
 
 timesteps:
   CONDTSTEP: 200                                                # time between SD condensation [s]
-  COLLTSTEP: 0.01                                                # time between SD collision [s]
+  COLLTSTEP: 0.05                                                # time between SD collision [s]
   MOTIONTSTEP: 200                                              # time between SDM motion [s]
   COUPLTSTEP: 2000                                              # time between dynamic couplings [s]
   OBSTSTEP: 200                                                 # time between SDM observations [s]
-  T_END: 3800                                                   # time span of integration from 0s to T_END [s]
+  T_END: 30000                                                   # time span of integration from 0s to T_END [s]
 
 ### Initialisation Parameters ###
 inputfiles:

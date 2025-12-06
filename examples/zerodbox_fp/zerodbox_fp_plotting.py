@@ -113,10 +113,10 @@ def plot_zerodbox_fp_plot_validation_figure(
 
 
 def main(path2CLEO, savefigpath, grid_filename, setupfile, dataset, kernel):
-    numconc = 2**23  # total no. conc of real droplets [m^-3]
-    volexpr0 = 30.531e-6  # peak of volume exponential distribution [m]
+    numconc = 2**32  # total no. conc of real droplets [m^-3]
+    volexpr0 = 4.0e-6  # peak of volume exponential distribution [m]
     smoothsigconst = 0.62
-    xlims = [10, 5000]
+    xlims = [1, 5000]
     t2plts = [0, 1200, 2400, 3600]
     withgol, plotwitherr = False, False
     savename = savefigpath / "zerodbox_fp_validation.png"
