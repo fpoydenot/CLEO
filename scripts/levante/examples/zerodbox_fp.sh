@@ -1,10 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=fp2024
-#SBATCH --partition=compute
-#SBATCH --nodes=1
+#SBATCH --partition=shared
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=256
-#SBATCH --time=00:20:00
+#SBATCH --mem=64G
+#SBATCH --time=2-00:00:00
 #SBATCH --mail-user=florian.poydenot@mpimet.mpg.de
 #SBATCH --mail-type=ALL
 #SBATCH --account=um1487
@@ -21,7 +20,7 @@ do_build="true"
 buildtype="openmp"
 compilername="intel"
 path2CLEO=${HOME}/CLEO/
-path2build=${HOME}/CLEO/build_colls0d_fp/zerodbox_fp/
+path2build=/work/um1487/m301163/cleo_runs/zerodbox_ndrops/build_colls0d_2_24/zerodbox_fp/
 build_flags="-DCLEO_COUPLED_DYNAMICS=null -DCLEO_DOMAIN=cartesian \
   -DCLEO_NO_ROUGHPAPER=true -DCLEO_NO_PYBINDINGS=true"
 executables="flocolls"
