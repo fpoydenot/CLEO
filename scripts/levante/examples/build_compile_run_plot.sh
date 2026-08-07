@@ -1,14 +1,14 @@
 #!/bin/bash
-#SBATCH --job-name=runexample
+#SBATCH --job-name=runexamplecleo
 #SBATCH --partition=compute
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=940MB
 #SBATCH --time=00:10:00
-#SBATCH --mail-user=clara.bayley@mpimet.mpg.de
-#SBATCH --mail-type=FAIL
-#SBATCH --account=bm1183
+#SBATCH --mail-user=florian.poydenot@mpimet.mpg.de
+#SBATCH --mail-type=ALL
+#SBATCH --account=um1487
 #SBATCH --output=./runexample_out.%j.out
 #SBATCH --error=./runexample_err.%j.out
 
@@ -33,7 +33,7 @@ executables="$7"
 pythonscript=$8
 script_args="$9"
 
-python=/home/m/m300950/CLEO/.venv/bin/python3
+python=/home/m/m301163/CLEO/.venv/bin/python
 enabledebug=false
 make_clean=false
 stacksize_limit=204800 # ulimit -s [stacksize_limit] (kB)
@@ -47,10 +47,10 @@ fi
 
 if [[ "${compilername}" == "gcc" ]]
 then
-  yacyaxtroot=/work/bm1183/m300950/yacyaxt/gcc
+  yacyaxtroot="/work/um1487/m301163/yacyaxt/intel/"
 elif [[ "${compilername}" == "intel" ]]
 then
-  yacyaxtroot=/work/bm1183/m300950/yacyaxt/intel
+  yacyaxtroot="/work/um1487/m301163/yacyaxt/gcc/"
 fi
 ### ---------------------------------------------------- ###
 ### ---------------------------------------------------- ###

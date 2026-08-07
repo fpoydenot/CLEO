@@ -1,15 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=build_compile_cleo
-#SBATCH --partition=gpu
+#SBATCH --partition=compute
 #SBATCH --nodes=1
-#SBATCH --gpus=1
-#SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=128
+#SBATCH --cpus-per-task=256
 #SBATCH --mem=940M
 #SBATCH --time=00:15:00
-#SBATCH --mail-user=clara.bayley@mpimet.mpg.de
-#SBATCH --mail-type=FAIL
-#SBATCH --account=bm1183
+#SBATCH --mail-user=florian.poydenot@mpimet.mpg.de
+#SBATCH --mail-type=ALL
+#SBATCH --account=um1487
 #SBATCH --output=./build/bin/build_compile_cleo_out.%j.out
 #SBATCH --error=./build/bin/build_compile_cleo_err.%j.out
 
@@ -22,13 +20,13 @@ spack unload --all
 ### ----- You need to edit these lines to specify ------ ###
 ### ----- your build configuration and executables ----- ###
 ### ---------------------------------------------------- ###
-buildtype=$1                                   # "serial", "threads", "openmp" or "cuda"
+buildtype=${1:-openmp}                           # "serial", "threads", "openmp" or "cuda"
 compilername=${2:-intel}                       # "intel" or "gcc"
 path2CLEO=${3:-${HOME}/CLEO}                   # must be absolute path
 path2build=${4:-${path2CLEO}/build}            # should be absolute path
-yacyaxtroot=${5:-/work/bm1183/m300950/yacyaxt/${compilername}} # yac and yaxt in yacyaxtroot/yac and yacyaxtroot/yaxt
+yacyaxtroot=${5:-/work/um1487/m301163/yacyaxt/${compilername}} # yac and yaxt in yacyaxtroot/yac and yacyaxtroot/yaxt
 build_flags=${6:-"-DCLEO_COUPLED_DYNAMICS="" \
-  -DCLEO_PYTHON=/home/m/m300950/CLEO/.venv/bin/python3"} # CLEO_BUILD_FLAGS
+  -DCLEO_PYTHON=/home/m/m301163/CLEO/.venv/bin/python3"} # CLEO_BUILD_FLAGS
 executables=${7:-"cleocoupledsdm"}             # list of executables to compile or "NONE"
 enabledebug=${8:-false}                        # == "true" or otherwise false
 make_clean=${9:-true}                          # == "true" or otherwise false

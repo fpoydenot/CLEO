@@ -1,15 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=shima2009
-#SBATCH --partition=gpu
+#SBATCH --partition=compute
 #SBATCH --nodes=1
-#SBATCH --gpus=4
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=128
-#SBATCH --mem=10G
+#SBATCH --cpus-per-task=256
 #SBATCH --time=00:20:00
-#SBATCH --mail-user=clara.bayley@mpimet.mpg.de
-#SBATCH --mail-type=FAIL
-#SBATCH --account=bm1183
+#SBATCH --mail-user=florian.poydenot@mpimet.mpg.de
+#SBATCH --mail-type=ALL
+#SBATCH --account=um1487
 #SBATCH --output=./shima2009_out.%j.out
 #SBATCH --error=./shima2009_err.%j.out
 
@@ -20,8 +18,8 @@
 ### -------- to compile, and your python script -------- ###
 ### ---------------------------------------------------- ###
 do_build="true"
-buildtype="cuda"
-compilername="gcc"
+buildtype="openmp"
+compilername="intel"
 path2CLEO=${HOME}/CLEO/
 path2build=${HOME}/CLEO/build_colls0d/shima2009/
 build_flags="-DCLEO_COUPLED_DYNAMICS=null -DCLEO_DOMAIN=cartesian \
