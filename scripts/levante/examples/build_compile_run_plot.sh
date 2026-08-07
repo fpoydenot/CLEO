@@ -47,10 +47,17 @@ fi
 
 if [[ "${compilername}" == "gcc" ]]
 then
+<<<<<<< HEAD
   yacyaxtroot="/work/um1487/m301163/yacyaxt/intel/"
 elif [[ "${compilername}" == "intel" ]]
 then
   yacyaxtroot="/work/um1487/m301163/yacyaxt/gcc/"
+=======
+  yacyaxtroot=/work/mh0731/m300950/yacyaxt/gcc
+elif [[ "${compilername}" == "intel" ]]
+then
+  yacyaxtroot=/work/mh0731/m300950/yacyaxt/intel
+>>>>>>> refs/remotes/origin/add-kernel-flo
 fi
 ### ---------------------------------------------------- ###
 ### ---------------------------------------------------- ###

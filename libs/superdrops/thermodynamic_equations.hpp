@@ -22,13 +22,31 @@
 
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Pair.hpp>
-#include <cassert>
 
 #include "../cleoconstants.hpp"
 #include "superdrop.hpp"
 
 namespace dlc = dimless_constants;
 namespace DC = dimmed_constants;
+
+/**
+ * @brief Calculate the dry air density of a moist volume.
+ *
+ * This function calculates the density of dry air using the ideal gas law, accounting
+ * for the presence of water vapor by adjusting the specific gas constant.
+ *
+ * @param press pressure [dimensionless]
+ * @param temp temperature [dimensionless]
+ * @param qvap mass mixing ratio of water vapor [dimensionless]
+ *
+ * @return dimensionless dry air density
+ */
+KOKKOS_INLINE_FUNCTION
+double dry_air_density(const double press, const double temp, const double qvap) {
+  const double rgas_equiv = dlc::Rgas_dry + dlc::Rgas_v * qvap;
+  const double rho_dry = press / (rgas_equiv * temp);
+  return rho_dry;
+}
 
 /**
  * @brief Calculate the specific heat capacity of moist air.
@@ -75,7 +93,7 @@ double supersaturation_ratio(const double press, const double qvap, const double
  * @return A Kokkos pair containing 'a' and 'b' factors in that order.
  */
 KOKKOS_INLINE_FUNCTION
-Kokkos::pair<double, double> kohler_factors(const Superdrop &drop, const double temp) {
+Kokkos::pair<double, double> kohler_factors(const Superdrop& drop, const double temp) {
   constexpr double akoh_constant = 3.3e-7 / (dlc::TEMP0 * dlc::R0);
   const auto akoh = akoh_constant / temp;  // dimensionless version of eqn [6.24]
 

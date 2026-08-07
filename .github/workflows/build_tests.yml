@@ -1,4 +1,4 @@
-name: build and run tests
+name: build and compilation tests
 
 on: pull_request
 
@@ -14,7 +14,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/yaxt/
-          key: ${{ runner.os }}-yaxt-cache-v0.11.4
+          key: ${{ runner.os }}-yaxt-cache-v0.12.1
           restore-keys: |
             ${{ runner.os }}-yaxt-
 
@@ -23,11 +23,11 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/yac/
-          key: ${{ runner.os }}-yac-cache-v3.9.2
+          key: ${{ runner.os }}-yac-cache-v3.19.0
           restore-keys: |
             ${{ runner.os }}-yac-
 
-      - name: Setup
+      - name: Install Software Dependencies
         if: steps.cache_yaxt.outputs.cache-hit != 'true' || steps.cache_yac.outputs.cache-hit != 'true'
         run: |
           sudo apt-get update
@@ -40,8 +40,8 @@ jobs:
       - name: Build YAXT
         if: steps.cache_yaxt.outputs.cache-hit != 'true'
         run: |
-          mkdir yaxt-0.11.4 && cd yaxt-0.11.4
-          curl -s -L https://gitlab.dkrz.de/dkrz-sw/yaxt/-/archive/release-0.11.4/yaxt-0.11.4.tar.gz | tar xvz --strip-components=1
+          mkdir yaxt-0.12.1 && cd yaxt-0.12.1
+          curl -s -L https://owncloud.gwdg.de/index.php/s/wWQnb09qZFF4xYY/download | tar xvz --strip-components=1
           ./configure --without-regard-for-quality --without-example-programs \
             --without-perf-programs --with-pic --prefix=${{ runner.temp }}/yaxt
           make -j 4
@@ -50,26 +50,26 @@ jobs:
       - name: Build YAC
         if: steps.cache_yac.outputs.cache-hit != 'true'
         run: |
-          mkdir yac-v3.9.2 && cd yac-v3.9.2
-          curl -s -L https://gitlab.dkrz.de/dkrz-sw/yac/-/archive/v3.9.2/yac_v3.9.2.tar.gz | tar xvz --strip-components=1
+          mkdir yac-v3.19.0 && cd yac-v3.19.0
+          curl -s -L https://owncloud.gwdg.de/index.php/s/i1f5mUeStUYWSG9/download | tar xvz --strip-components=1
           ./configure CFLAGS="-fPIC" CC=mpicc FC=mpif90 --disable-mpi-checks \
             --with-yaxt-root=${{ runner.temp }}/yaxt --prefix=${{ runner.temp }}/yac
           make -j 4
           make install
 
-  build_yac_examples:
+  build_examples:
     runs-on: ubuntu-latest
     needs: setup
     strategy:
       matrix:
-        target: [all, adia0d, golcolls, longcolls, lowlistcolls, szakallurbichcolls,
-                testikstraubcolls, const2d, divfree2d, eurec4a1d, rshaft1d, spdtest,
-                bubble3d, fromfile, fromfile_irreg, cleo_python_bindings]
+        target: [all, adia0d, constcoalcolls, golcolls, longcolls, lowlistcolls, straubcolls,
+                szakallurbichcolls, testikstraubcolls, const2d, divfree2d, eurec4a1d, rshaft1d,
+                kokkostools, bubble3d, fromfile, fromfile_irreg, cleo_python_bindings]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup
+      - name: Install Software Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -82,29 +82,31 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/yaxt/
-          key: ${{ runner.os }}-yaxt-cache-v0.11.4
+          key: ${{ runner.os }}-yaxt-cache-v0.12.1
 
       - name: Restore YAC Cache
         uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/yac/
-          key: ${{ runner.os }}-yac-cache-v3.9.2
+          key: ${{ runner.os }}-yac-cache-v3.19.0
 
-      - name: Build YAC Example
+      - name: Build Example
         run: |
           mkdir build
           cmake -S ./ -B ./build \
           -DCMAKE_C_COMPILER=mpicc \
           -DCMAKE_CXX_COMPILER=mpic++ \
           -DCMAKE_CXX_FLAGS="-Werror -Wall -pedantic -O3" \
+          -DCMAKE_BUILD_TYPE=Release \
           -DKokkos_ENABLE_SERIAL=ON \
           -DCLEO_COUPLED_DYNAMICS=all \
           -DCLEO_DOMAIN=cartesian \
+          -DCLEO_FYAMLLIB=/usr/lib/x86_64-linux-gnu \
           -DCLEO_YAXT_ROOT=${{ runner.temp }}/yaxt \
           -DCLEO_YAC_ROOT=${{ runner.temp }}/yac \
           -DCMAKE_MODULE_PATH=${PWD}/libs/coupldyn_yac/cmake
 
-      - name: Compile YAC Example
+      - name: Compile Example
         run: cd build && make ${{ matrix.target }}
 
   parallelisation_execution_test:
@@ -117,7 +119,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup
+      - name: Install Software Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -130,15 +132,15 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/yaxt/
-          key: ${{ runner.os }}-yaxt-cache-v0.11.4
+          key: ${{ runner.os }}-yaxt-cache-v0.12.1
 
       - name: Restore YAC Cache
         uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/yac/
-          key: ${{ runner.os }}-yac-cache-v3.9.2
+          key: ${{ runner.os }}-yac-cache-v3.19.0
 
-      - name: Build and Compile Parallel Example
+      - name: Build Parallel Execution Test
         run: |
           mkdir build
           cmake -S ./ -B ./build \
@@ -148,13 +150,17 @@ jobs:
           -DKokkos_ENABLE_SERIAL=ON \
           -DCLEO_COUPLED_DYNAMICS=fromfile \
           -DCLEO_DOMAIN=cartesian \
+          -DCLEO_FYAMLLIB=/usr/lib/x86_64-linux-gnu \
           -DCLEO_YAXT_ROOT=${{ runner.temp }}/yaxt \
           -DCLEO_YAC_ROOT=${{ runner.temp }}/yac \
           -DCMAKE_MODULE_PATH=${PWD}/libs/coupldyn_yac/cmake
 
-      - name: Parallelization execution test
+      - name: Compile Parallel Execution Test
+        run: cd build && make ${{ matrix.target }}
+
+      - name: Run Parallelization Execution Test
         run: |
-          cd build && make ${{ matrix.target }}
+          cd build
           curl https://swift.dkrz.de/v1/dkrz_8f1b1e92-f07c-41c5-a4ae-8089ec495d87/CLEO/${{ matrix.target }}_data.tar.gz -o ${{ matrix.target }}_data.tar.gz
           tar -zxvf ${{ matrix.target }}_data.tar.gz
           cd .. && pwd
@@ -170,12 +176,3 @@ jobs:
           mv ./build/bin ./build/bin_8
           bash -l .github/compare_parallel_results.sh ${{ matrix.target }}_sol.zarr
           rm -rf ./build/bin_*
-
-  pytests:
-    name: pytest tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
-
-      - run: uv run pytest tests/

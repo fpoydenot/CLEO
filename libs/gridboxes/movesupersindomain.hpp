@@ -22,7 +22,6 @@
 
 #include <Kokkos_Core.hpp>
 #include <Kokkos_Profiling_ScopedRegion.hpp>
-#include <cassert>
 #include <concepts>
 
 #include "../cleoconstants.hpp"
@@ -35,6 +34,7 @@
 #include "mpi.h"
 #include "superdrops/motion.hpp"
 #include "superdrops/sdmmonitor.hpp"
+#include "superdrops/thermodynamic_equations.hpp"
 
 namespace dlc = dimless_constants;
 namespace KCS = KokkosCleoSettings;
@@ -62,12 +62,12 @@ struct MoveSupersInGridboxesFunctor {
    * when in serial
    */
   KOKKOS_INLINE_FUNCTION
-  void move_supers_in_gbx(const TeamMember &team_member, const unsigned int gbxindex,
-                          const State &state, const subviewd_supers supers) const {
+  void move_supers_in_gbx(const TeamMember& team_member, const unsigned int gbxindex,
+                          const State& state, const subviewd_supers supers) const {
     const size_t nsupers(supers.extent(0));
-    auto &_sdmotion = this->sdmotion;
-    auto &_gbxmaps = this->gbxmaps;
-    auto &_mo = this->mo;
+    auto& _sdmotion = this->sdmotion;
+    auto& _gbxmaps = this->gbxmaps;
+    auto& _mo = this->mo;
     Kokkos::parallel_for(Kokkos::TeamThreadRange(team_member, nsupers),
                          [=, &_sdmotion, &_gbxmaps, &_mo](const size_t kk) {
                            /* step (1) */
@@ -85,9 +85,9 @@ struct MoveSupersInGridboxesFunctor {
    * d_gbxs view in order to call move_supers_in_gbx
    */
   KOKKOS_INLINE_FUNCTION
-  void operator()(const TeamMember &team_member) const {
+  void operator()(const TeamMember& team_member) const {
     const auto ii = team_member.league_rank();
-    auto &gbx = d_gbxs(ii);
+    auto& gbx = d_gbxs(ii);
     move_supers_in_gbx(team_member, gbx.get_gbxindex(), gbx.state, gbx.supersingbx(domainsupers));
   }
 };
@@ -104,10 +104,11 @@ struct EffectOnHydrometeorStatesFunctor {
      * operator for functor in effect_on_hydrometeor_states function called in
      * parallel (Single PerTeam Policy) in order to change qcond of state
      */
-    KOKKOS_INLINE_FUNCTION void operator()(State &state) const {
+    KOKKOS_INLINE_FUNCTION void operator()(State& state) const {
       constexpr double R0cubed_VOL0 = dlc::R0 * dlc::R0 * dlc::R0 / dlc::VOL0;
       const auto rho_cond = totmass_cond / state.get_volume() * R0cubed_VOL0;  // rho_condensed
-      state.qcond = rho_cond / dlc::Rho_dry;
+      const auto rho_dry = dry_air_density(state.press, state.temp, state.qvap);
+      state.qcond = rho_cond / rho_dry;
     }
   };
 
@@ -115,7 +116,7 @@ struct EffectOnHydrometeorStatesFunctor {
    * operator for functor in effect_on_hydrometeor_states function called in
    * parallel loop over gridboxes in order to change hydrometeor mass(es) of each state
    */
-  KOKKOS_INLINE_FUNCTION void operator()(const TeamMember &team_member) const {
+  KOKKOS_INLINE_FUNCTION void operator()(const TeamMember& team_member) const {
     const auto ii = team_member.league_rank();
     const auto supers = d_gbxs(ii).supersingbx.readonly(domainsupers);
     const size_t nsupers(supers.extent(0));
@@ -123,8 +124,8 @@ struct EffectOnHydrometeorStatesFunctor {
     auto totmass_cond = double{0.0};  // total condensate mass in parcel volume 'dm'
     Kokkos::parallel_reduce(
         Kokkos::TeamThreadRange(team_member, nsupers),
-        KOKKOS_LAMBDA(const size_t kk, double &m_cond) {
-          const auto &drop = supers(kk);
+        KOKKOS_LAMBDA(const size_t kk, double& m_cond) {
+          const auto& drop = supers(kk);
           m_cond += drop.condensate_mass() * drop.get_xi();
         },
         totmass_cond);
@@ -145,16 +146,17 @@ template <GridboxMaps GbxMaps, Motion<GbxMaps> M, TransportAcrossDomain<GbxMaps>
 class MoveSupersInDomain {
  public:
   /* (expensive!) test if superdrops' gbxindex doesn't match gridbox's gbxindex,
-  raise error is assertion fails */
+  raise error if assertion fails */
   void check_sdgbxindex_during_motion(const viewd_constgbx d_gbxs,
                                       const viewd_constsupers totsupers) const {
     const auto ngbxs = d_gbxs.extent(0);
     Kokkos::parallel_for(
         "check_sdgbxindex_during_motion", TeamPolicy(ngbxs, KCS::team_size),
-        KOKKOS_LAMBDA(const TeamMember &team_member) {
+        KOKKOS_LAMBDA(const TeamMember& team_member) {
           const auto ii = team_member.league_rank();
-          assert(d_gbxs(ii).supersingbx.iscorrect(team_member, totsupers) &&
-                 "incorrect references to superdrops in gridbox during motion");
+          if (!d_gbxs(ii).supersingbx.iscorrect(team_member, totsupers)) {
+            Kokkos::abort("incorrect references to superdrops in gridbox during motion");
+          }
         });
   }
 
@@ -183,7 +185,7 @@ class MoveSupersInDomain {
    * when in serial
    */
   template <SDMMonitor SDMMo>
-  void move_supers_in_gridboxes(const GbxMaps &gbxmaps, const viewd_gbx d_gbxs,
+  void move_supers_in_gridboxes(const GbxMaps& gbxmaps, const viewd_gbx d_gbxs,
                                 const subviewd_supers domainsupers, const SDMMo mo) const {
     Kokkos::Profiling::ScopedRegion region("sdm_movement_move_in_gridboxes");
 
@@ -207,8 +209,8 @@ class MoveSupersInDomain {
    *
    * optionally can incude test to check superdroplets end up in correct gridbox (for debugging)
    */
-  SupersInDomain move_supers_between_gridboxes(const GbxMaps &gbxmaps, const viewd_gbx d_gbxs,
-                                               SupersInDomain &allsupers) const {
+  SupersInDomain move_supers_between_gridboxes(const GbxMaps& gbxmaps, const viewd_gbx d_gbxs,
+                                               SupersInDomain& allsupers) const {
     Kokkos::Profiling::ScopedRegion region("sdm_movement_between_gridboxes");
 
     allsupers = transport_across_domain(gbxmaps, d_gbxs, allsupers);
@@ -216,7 +218,9 @@ class MoveSupersInDomain {
     set_gridboxes_refs(d_gbxs, allsupers.domain_supers());
 
     /* optional (expensive!) test if superdrops' gbxindex doesn't match gridbox's gbxindex */
-    // check_sdgbxindex_during_motion(d_gbxs, allsupers.get_totsupers_readonly());
+#ifndef NDEBUG
+    check_sdgbxindex_during_motion(d_gbxs, allsupers.get_totsupers_readonly());
+#endif
 
     return allsupers;
   }
@@ -227,8 +231,8 @@ class MoveSupersInDomain {
   (3) move superdroplets between gridboxes (host)
   (4) apply domain boundary conditions (host and/or device)
   */
-  SupersInDomain move_superdrops_in_domain(const unsigned int t_sdm, const GbxMaps &gbxmaps,
-                                           viewd_gbx d_gbxs, SupersInDomain &allsupers,
+  SupersInDomain move_superdrops_in_domain(const unsigned int t_sdm, const GbxMaps& gbxmaps,
+                                           viewd_gbx d_gbxs, SupersInDomain& allsupers,
                                            const SDMMonitor auto mo) const {
     /* steps (1 - 2) */
     move_supers_in_gridboxes(gbxmaps, d_gbxs, allsupers.domain_supers(), mo);
@@ -270,7 +274,7 @@ class MoveSupersInDomain {
         boundary_conditions(i_boundary_conditions) {}
 
   /* extra constructor useful to help when compiler cannot deduce type of GbxMaps */
-  MoveSupersInDomain(const GbxMaps &gbxmaps, const M i_sdmotion, const T i_transport_across_domain,
+  MoveSupersInDomain(const GbxMaps& gbxmaps, const M i_sdmotion, const T i_transport_across_domain,
                      const BCs i_boundary_conditions)
       : MoveSupersInDomain(i_sdmotion, i_transport_across_domain, i_boundary_conditions) {}
 
@@ -285,8 +289,8 @@ class MoveSupersInDomain {
    * @param allsupers Struct to handle all superdrops (both in and out of bounds of domain).
    *
    */
-  SupersInDomain run_step(const unsigned int t_sdm, const GbxMaps &gbxmaps, viewd_gbx d_gbxs,
-                          SupersInDomain &allsupers, const SDMMonitor auto mo) const {
+  SupersInDomain run_step(const unsigned int t_sdm, const GbxMaps& gbxmaps, viewd_gbx d_gbxs,
+                          SupersInDomain& allsupers, const SDMMonitor auto mo) const {
     if (sdmotion.on_step(t_sdm)) {
       allsupers = move_superdrops_in_domain(t_sdm, gbxmaps, d_gbxs, allsupers, mo);
       effect_on_hydrometeor_states(d_gbxs, allsupers.domain_supers_readonly());
