@@ -2,6 +2,74 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.69.0](https://github.com/yoctoyotta1024/CLEO/compare/0b64f49814ecd4eb08f9c73efee9fd9ae359622d..v0.69.0) - 2026-08-20
+#### Bug Fixes
+- bad const - ([fd55e84](https://github.com/yoctoyotta1024/CLEO/commit/fd55e84095692c8288f90fac6736a6b3702587c1)) - clara.bayley
+- missing arguments - ([b7226ad](https://github.com/yoctoyotta1024/CLEO/commit/b7226adad1023207f15a9d1d840e42be6ad769dd)) - clara.bayley
+- missing type declarations - ([26974ef](https://github.com/yoctoyotta1024/CLEO/commit/26974efe39676e12b0120b7861cad2395a83ebb5)) - clara.bayley
+#### Features
+- number of superdroplets is allowed to change during microphysics - ([6d2a825](https://github.com/yoctoyotta1024/CLEO/commit/6d2a825e631d14267abe117df21b6d5d7817aa6b)) - clara.bayley
+#### Miscellaneous Chores
+- better note in configs - ([cbb3f76](https://github.com/yoctoyotta1024/CLEO/commit/cbb3f764314743ab38a4f25f25fe8ce5a5bc070e)) - clara.bayley
+- replace is_null boolean with number of oob supers - ([2594a4f](https://github.com/yoctoyotta1024/CLEO/commit/2594a4f4d45d01a207949a044ef6e9ba295ef2f4)) - clara.bayley
+- is_null boolean to explicit words - ([6f8ff5c](https://github.com/yoctoyotta1024/CLEO/commit/6f8ff5cdbd5c996f7c03f53f0efb5b9782b3e0ab)) - clara.bayley
+- better comment - ([d27154f](https://github.com/yoctoyotta1024/CLEO/commit/d27154f32387ad4055d8c72c73814b862d37f769)) - clara.bayley
+- correct name of file - ([4b2b420](https://github.com/yoctoyotta1024/CLEO/commit/4b2b42029e2cb0eb58c7e6a7b49ba53fd6b2a1f5)) - clara.bayley
+- better comments - ([8bb53af](https://github.com/yoctoyotta1024/CLEO/commit/8bb53af4452792880162d3fa56732294ae8744aa)) - clara.bayley
+- remove duplicated parameter - ([d794d34](https://github.com/yoctoyotta1024/CLEO/commit/d794d34395ee65aa5df8a718c42aaec4f8d60488)) - clara.bayley
+#### Refactoring
+- **(as2017)** add boolean for gen_config - ([287436a](https://github.com/yoctoyotta1024/CLEO/commit/287436ae36bc8ee67508fec4a3c780523e1b8431)) - clara.bayley
+- **(as2017)** remove hardcoded-values from as2017 inputfiles - ([ea0d198](https://github.com/yoctoyotta1024/CLEO/commit/ea0d19853ce7c4e49a24df18a687f1163699291d)) - clara.bayley
+- **(breakup)** remove hardcoded values from inputfiles - ([cea0167](https://github.com/yoctoyotta1024/CLEO/commit/cea0167969b6c7bffe69da8667c8148298820900)) - clara.bayley
+- **(breakup)** add booleans for gen_config, gen_gbxs and gen_supers - ([f0a646d](https://github.com/yoctoyotta1024/CLEO/commit/f0a646d1ddb27883f3a569e2b40c7f871d59fcab)) - clara.bayley
+- **(constthermo2d)** remove hardcoded values from inputfiles - ([ea58b55](https://github.com/yoctoyotta1024/CLEO/commit/ea58b55b90079e12d5c5f22095cc4ae59bbc35bb)) - clara.bayley
+- **(constthermo2d)** add booleans for gen_config, gen_gbxs, gen_supers and gen_thermo - ([d191ecf](https://github.com/yoctoyotta1024/CLEO/commit/d191ecf7a8182a7aa72ab5db4e42ea615da11795)) - clara.bayley
+- **(cuspbifurc)** remove hardcoded values from inputfiles - ([6871e09](https://github.com/yoctoyotta1024/CLEO/commit/6871e091781d962e6d8603b8af14fbf2b8d6f282)) - clara.bayley
+- **(cuspbifurc)** add booleans for gen_config, gen_gbxs and gen_supers - ([cfc222b](https://github.com/yoctoyotta1024/CLEO/commit/cfc222bb710921ac357c36eceed144f7ead6425f)) - clara.bayley
+- **(divfree2d)** remove hardcoded values from inputfiles - ([d20ba9b](https://github.com/yoctoyotta1024/CLEO/commit/d20ba9b121e1a5497be74654e6ff0a4505409f17)) - clara.bayley
+- **(divfree2d)** add booleans for gen_config, gen_gbxs, gen_supers and gen_thermo - ([0a10b89](https://github.com/yoctoyotta1024/CLEO/commit/0a10b89f8402fe75a87208ae1be5cb834ac13ded)) - clara.bayley
+- **(eurec4a1d)** remove hardcoded values from inputfiles - ([55f270d](https://github.com/yoctoyotta1024/CLEO/commit/55f270dca04e6cf7b59035cd0905696fa3e38e02)) - clara.bayley
+- **(eurec4a1d)** add booleans for gen_config, gen_gbxs, gen_supers and gen_thermo - ([e918feb](https://github.com/yoctoyotta1024/CLEO/commit/e918febd1092234a4d63df8aaaf660db4a65c658)) - clara.bayley
+- **(fromfile)** remove hardcoded values from inputfiles - ([7ed076b](https://github.com/yoctoyotta1024/CLEO/commit/7ed076bc769472c3ee46c4ef56f6c1dd4730de85)) - clara.bayley
+- **(fromfile)** add booleans for gen_config, gen_gbxs, gen_supers and gen_thermo - ([474ab65](https://github.com/yoctoyotta1024/CLEO/commit/474ab652fe849cb316f2792898587dc06c7d7b20)) - clara.bayley
+- **(fromfile_irreg)** remove hardcoded values from inputfiles - ([355ec4f](https://github.com/yoctoyotta1024/CLEO/commit/355ec4f8c47d61c158f99ebb95dc2a5076894e76)) - clara.bayley
+- **(fromfile_irreg)** add booleans for gen_config, gen_gbxs, gen_supers and gen_thermo - ([bb8db8b](https://github.com/yoctoyotta1024/CLEO/commit/bb8db8b986a0e52d7ade8c9cf0645eb7fee0e6c2)) - clara.bayley
+- **(kokkostools)** delete kokkostools example and associated bash scripts - ([0b64f49](https://github.com/yoctoyotta1024/CLEO/commit/0b64f49814ecd4eb08f9c73efee9fd9ae359622d)) - clara.bayley
+- **(python_bindings)** remove hardcoded values from inputfiles - ([9322765](https://github.com/yoctoyotta1024/CLEO/commit/932276532a9f58e55957ef33539238f3778f3bf3)) - clara.bayley
+- **(python_bindings)** add booleans for gen_config, gen_gbxs and gen_supers - ([d807073](https://github.com/yoctoyotta1024/CLEO/commit/d8070731650f74f6b0dd5f30dd22d0586580a1aa)) - clara.bayley
+- **(rainshaft1d)** remove hardcoded values from inputfiles - ([18980ce](https://github.com/yoctoyotta1024/CLEO/commit/18980ce2882dad9e87dd72ce381ca16d04e98771)) - clara.bayley
+- **(rainshaft1d)** add booleans for gen_config, gen_gbxs, gen_supers and gen_thermo - ([f18a74a](https://github.com/yoctoyotta1024/CLEO/commit/f18a74aaa7f3edbb8ee10824c610425f685c525f)) - clara.bayley
+- **(shima2009)** remove hardcoded values from inputfiles - ([e3157f1](https://github.com/yoctoyotta1024/CLEO/commit/e3157f193d97e933dbf350741e081a66c41bee64)) - clara.bayley
+- **(shima2009)** add booleans for gen_config, gen_gbxs and gen_supers - ([36af451](https://github.com/yoctoyotta1024/CLEO/commit/36af451191ada6861826ca941662312aad07c292)) - clara.bayley
+- sort superdroplets after null SD is detected and return modified supers - ([112ac04](https://github.com/yoctoyotta1024/CLEO/commit/112ac0497e5123a89cbbd2f71cb008cc5a5050be)) - clara.bayley
+- move superdroplet is_null chekc into superdrop struct - ([2c9c1e5](https://github.com/yoctoyotta1024/CLEO/commit/2c9c1e583e7ef5a549dd7b0614314d438dc270ad)) - clara.bayley
+- set sgbxindex to oob if xi=0 - ([fbf4b51](https://github.com/yoctoyotta1024/CLEO/commit/fbf4b516814d438229e51494e36174a45026b2e8)) - clara.bayley
+- abort on is_any_null at end of collisions - ([fc6aaff](https://github.com/yoctoyotta1024/CLEO/commit/fc6aaffe79b8c962954676b1324a45c1dd1fc728)) - clara.bayley
+- calculate reduction over any null superdroplets during collisions - ([d64e7f1](https://github.com/yoctoyotta1024/CLEO/commit/d64e7f1b973a24b8441330ddd41907d5933e4f28)) - clara.bayley
+- breakup returns is_null boolean - ([0b2919e](https://github.com/yoctoyotta1024/CLEO/commit/0b2919e74cb51e998e544a308fcc30cd7c37546a)) - clara.bayley
+- replace abort in coalescence with true for null superdroplet case - ([46b9ab0](https://github.com/yoctoyotta1024/CLEO/commit/46b9ab0690375eb0c5ff25cd61eefa2a28acae5e)) - clara.bayley
+- return supers of a gridbox from microphysical process - ([1347bb3](https://github.com/yoctoyotta1024/CLEO/commit/1347bb3f9061bd3739fc9bee58a2fb2dacad5b15)) - clara.bayley
+
+- - -
+
+## [v0.68.2](https://github.com/yoctoyotta1024/CLEO/compare/cee64060907c45b6a91f09e3aac9d1557b47fc9b..v0.68.2) - 2026-08-17
+#### Bug Fixes
+- use zcoord not xcoord for rhotilda - ([1ad307a](https://github.com/yoctoyotta1024/CLEO/commit/1ad307a27eb55db1ffa1fb0c1c6880877bbe5a36)) - clara.bayley
+#### Continuous Integration
+- only run publishing and version control on yoctoyotta1024/CLEO repo - ([4e187a5](https://github.com/yoctoyotta1024/CLEO/commit/4e187a50bea8fa0f2e4daf99d80ae0d5bc3272d9)) - clara.bayley
+#### Documentation
+- fixes to html building and add breakup doc - ([526e10b](https://github.com/yoctoyotta1024/CLEO/commit/526e10b2e230f9a68bde4ef437fd17e9d8c17a8b)) - clara.bayley
+- correct docstrings for doxygen - ([562acdb](https://github.com/yoctoyotta1024/CLEO/commit/562acdb44754fe3080fb8b8ca76c608446212527)) - clara.bayley
+- update gcc in note - ([d5b6a16](https://github.com/yoctoyotta1024/CLEO/commit/d5b6a16ded7f9128489bac0c34a5375c59982ed7)) - clara.bayley
+- correct cocogitto link - ([6dcc425](https://github.com/yoctoyotta1024/CLEO/commit/6dcc425e4e1e7b36a12726118639a869a42ce427)) - clara.bayley
+#### Miscellaneous Chores
+- format all CLEO libraries except coupldyn_yac (and bubble example) - ([36019e2](https://github.com/yoctoyotta1024/CLEO/commit/36019e260cd7c76813fadd2fd13643b5526046f5)) - clara.bayley
+- format examples except bubble - ([16af919](https://github.com/yoctoyotta1024/CLEO/commit/16af919befc452cc25effdd8583176b50b88bd97)) - clara.bayley
+- formatting hpp in libs - ([2a83315](https://github.com/yoctoyotta1024/CLEO/commit/2a8331535d87246ebcb4c251b6b482e41b41cfc1)) - clara.bayley
+- formatting roughpaper - ([cee6406](https://github.com/yoctoyotta1024/CLEO/commit/cee64060907c45b6a91f09e3aac9d1557b47fc9b)) - clara.bayley
+
+- - -
+
 ## [v0.68.1](https://github.com/yoctoyotta1024/CLEO/compare/ff7765503372606b892dbb28ff02af2aae3c6805..v0.68.1) - 2026-07-31
 #### Bug Fixes
 - missing stdexcept lib - ([495d0ee](https://github.com/yoctoyotta1024/CLEO/commit/495d0ee41b492d4ab36c50376f31aff48b1a1f98)) - clara.bayley
