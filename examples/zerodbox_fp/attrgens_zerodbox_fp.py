@@ -3,7 +3,7 @@ Copyright (c) 2024 MPI-M, Clara Bayley
 
 
 ----- CLEO -----
-File: attrgens_shima2009.py
+File: attrgens_zerodbox_fp.py
 Project: boxmodelcollisions
 Created Date: Saturday 15th June 2024
 Author: Clara Bayley (CB)
@@ -20,17 +20,14 @@ import numpy as np
 
 
 class SampleRadiiFP2024:
-    """TODO: LOGNORMAL"""
-
     """method to generate superdroplet radii by sampling between rspan[0] and rspan[1]
-    with probability weighted by volume exponential probability distribution, as in
-    Shima et al. 2009"""
+    with probability weighted by volume lognormal probability distribution."""
 
     def __init__(self, radius0, rspan):
         self.rspan = rspan  # [min, max] radii to sample between [m]
         self.vol0 = (
             4.0 / 3.0 * np.pi * radius0**3
-        )  # peak of volume exponential distribution [m^3]
+        )  # peak of volume lognormal distribution [m^3]
 
     def __call__(self, nsupers):
         """Returns radii for nsupers sampled from rspan [m]"""

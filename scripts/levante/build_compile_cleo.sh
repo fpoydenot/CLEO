@@ -24,11 +24,7 @@ buildtype=${1:-openmp}                           # "serial", "threads", "openmp"
 compilername=${2:-intel}                       # "intel" or "gcc"
 path2CLEO=${3:-${HOME}/CLEO}                   # must be absolute path
 path2build=${4:-${path2CLEO}/build}            # should be absolute path
-<<<<<<< HEAD
 yacyaxtroot=${5:-/work/um1487/m301163/yacyaxt/${compilername}} # yac and yaxt in yacyaxtroot/yac and yacyaxtroot/yaxt
-=======
-yacyaxtroot=${5:-/work/mh0731/m300950/yacyaxt/${compilername}} # yac and yaxt in yacyaxtroot/yac and yacyaxtroot/yaxt
->>>>>>> refs/remotes/origin/add-kernel-flo
 build_flags=${6:-"-DCLEO_COUPLED_DYNAMICS="" \
   -DCLEO_PYTHON=/home/m/m301163/CLEO/.venv/bin/python3"} # CLEO_BUILD_FLAGS
 executables=${7:-"cleocoupledsdm"}             # list of executables to compile or "NONE"

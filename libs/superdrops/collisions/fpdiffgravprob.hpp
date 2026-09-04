@@ -104,21 +104,6 @@ struct FPDiffGravProb {
   KOKKOS_FUNCTION
   double operator()(const Superdrop &drop1, const Superdrop &drop2, const double DELT,
                     const double VOLUME) const;
-
-  FPDiffGravProbNoEff() : prob_jk_const(Kokkos::numbers::pi * dlc::R0 * dlc::R0 * 0.003934152) {}
-  // mathcalu = 0.003934152 / dlc::W0;  // dimensionless conversion of the velocity prefactor
-
-  /* returns probability that a pair of droplets collide
-  (and coalesce or breakup etc.) according to the hydrodynamic,
-  i.e. gravitational, collision kernel. Probability is given by
-  prob_jk = K(drop1, drop2) * delta_t/delta_vol, (see Shima 2009 eqn 3)
-  where the kernel, K(drop1, drop2) := eff * pi * (r1 + r2)^2 * |v1−v2|,
-  given the efficiency factor eff = eff(drop1, drop2), for
-  example as expressed in equation 11 of Simmel at al. 2002 for
-  collision-coalescence */
-  KOKKOS_FUNCTION
-  double operator()(const Superdrop &drop1, const Superdrop &drop2, const double DELT,
-                    const double VOLUME) const;
 };
 
 #endif  // LIBS_SUPERDROPS_COLLISIONS_FPDIFFGRAVPROB_HPP_

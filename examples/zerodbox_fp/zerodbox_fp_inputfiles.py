@@ -107,6 +107,7 @@ def initial_superdroplet_conditions_for_setup(
         grid_filename,
         nsupers,
         numconc,
+        numconc_tolerance=0.01,
         isprintinfo=True,
         isfigures=isfigures,
         savefigpath=savefigpath,
@@ -153,9 +154,9 @@ def main(
     SDgbxs2plt = "all"  # gbxindex of initial SDs to plot if any(isfigures) (nb. "all" can be very slow)
 
     ### --- settings for 0-D Model gridbox boundaries --- ###
-    zgrid = np.asarray([0, 100])
-    xgrid = np.asarray([0, 100])
-    ygrid = np.asarray([0, 100])
+    zgrid = np.asarray([0, 1])
+    xgrid = np.asarray([0, 1])
+    ygrid = np.asarray([0, 1])
 
     ### --- settings for initial superdroplets --- ###
     nsupers = int(config["domain"]["maxnsupers"])
@@ -163,13 +164,13 @@ def main(
     ### --- settings for initial superdroplets for setup 1 --- ###
     # radius distirbution from exponential in droplet volume
     rspan_1 = [1e-9, 10e-6]  # max and min range of radii to sample [m]
-    volexpr0_1 = 4.0e-6  # peak of volume exponential distribution [m]
-    numconc_1 = 2**32  # total no. conc of real droplets [m^-3]
+    vollognorm0_1 = 4.0e-6  # peak of volume lognormal distribution [m]
+    numconc_1 = 2**27  # 1.34e8  # total no. conc of real droplets [m^-3]
 
     # attribute generators
     xiprobdist_1 = attrgens_zerodbox_fp.SampleXiFP2024()
     radiigen_1 = attrgens_zerodbox_fp.SampleRadiiFP2024(
-        volexpr0_1, rspan_1
+        vollognorm0_1, rspan_1
     )  # radii are sampled from rspan [m]
 
     ### --- settings for initial superdroplets for setup 2 --- ###

@@ -18,8 +18,9 @@ set(SOURCES
   "collisionkinetics.cpp"
   "golovinprob.cpp"
   "longhydroprob.cpp"
-  "lowlistprob.cpp"
   "fpdiffgravprob.cpp"
+  "lam08prob.cpp"
+  "lam12prob.cpp"
 )
 # must use STATIC (not(!) SHARED) lib for linking to executable if build is CUDA enabled with Kokkos
 add_library("${LIBNAME}" STATIC ${SOURCES})
